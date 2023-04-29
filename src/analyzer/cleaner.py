@@ -8,6 +8,10 @@ class Cleaner:
     def __init__(self, activities: pd.DataFrame):
         self.activities = activities
 
+    def remove_empty_activities(self):
+        # remove empty activities
+        self.activities = self.activities[self.activities["map.summary_polyline"] != ""]
+
     def convert_data_types(self):
         # convert data types
         self.activities.loc[:, "start_date"] = pd.to_datetime(
@@ -63,6 +67,7 @@ class Cleaner:
         )
 
     def __call__(self):
+        self.remove_empty_activities()
         self.decode_polylines()
         self.convert_data_types()
         self.convert_values()

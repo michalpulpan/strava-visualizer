@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 import scraper.scraper as scraper_module
 import analyzer.cleaner as cleaner_module
 import plotter.plotter as plotter_module
+import analyzer.transformer as transformer_module
 
 load_dotenv()
 
@@ -40,17 +41,20 @@ def main(args):
         return
 
     logger.info(f"Number of activities: {len(data)}")
-    activities = pd.json_normalize(data)
-    print(activities[["name", "distance", "average_speed", "moving_time"]].sample(5))
+    activities_raw = pd.json_normalize(data)
+    print(
+        activities_raw[["name", "distance", "average_speed", "moving_time"]].sample(5)
+    )
 
     logger.info("Cleaning data")
-    activities = cleaner_module.Cleaner(activities)()
-    print(activities[["name", "distance", "average_speed", "moving_time"]].sample(5))
+    activities = cleaner_module.Cleaner(activities_raw)()
+    # print(activities[["name", "distance", "average_speed", "moving_time"]].sample(5))
 
     logger.info("Data loaded")
 
     plotter = plotter_module.Plotter(activities)
-    plotter.single_random_plot()
+    plotter.all_activities_plot()
+    plotter.add_heatmap()
 
     logger.info("App finished")
 
