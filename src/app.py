@@ -54,7 +54,24 @@ def main(args):
 
     plotter = plotter_module.Plotter(activities)
     plotter.all_activities_plot()
-    plotter.add_heatmap()
+    if args.heatmap:
+        plotter.add_heatmap()
+
+    if args.general_plot:
+        plotter.general_plot()
+        plotter.general_plot_weeks()
+
+    if args.speed_elevation:
+        plotter.speed_elevation_plot()
+
+        # if args.elevation:
+        #     logger.info("Getting elevation")
+        #     scraper = scraper_module.Scraper()
+        #     scraper.grab_elevation_data(activities)
+        return
+    if args.elevation:
+        # plotter.plot_top_elevations()
+        plotter.make_map_of_top_elevations()
 
     logger.info("App finished")
 
@@ -70,6 +87,36 @@ if __name__ == "__main__":
         "--version",
         action="version",
         version="%(prog)s (version {version})".format(version=__version__),
+    )
+
+    parser.add_argument(
+        "--heatmap",
+        action="store_true",
+        default=False,
+    )
+
+    parser.add_argument(
+        "--all_activities",
+        action="store_true",
+        default=False,
+    )
+
+    parser.add_argument(
+        "--general_plot",
+        action="store_true",
+        default=False,
+    )
+
+    parser.add_argument(
+        "--speed_elevation",
+        action="store_true",
+        default=False,
+    )
+
+    parser.add_argument(
+        "--elevation",
+        action="store_true",
+        default=False,
     )
 
     args = parser.parse_args()

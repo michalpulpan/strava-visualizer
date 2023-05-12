@@ -14,6 +14,32 @@ class Cleaner:
 
     def convert_data_types(self):
         # convert data types
+        self.activities["month"] = pd.to_datetime(
+            self.activities["start_date_local"]
+        ).dt.month_name()
+        print(self.activities["month"])
+        months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ]
+        self.activities["month"] = pd.Categorical(
+            self.activities["month"], categories=months, ordered=True
+        )
+        print(self.activities["month"].head())
+        self.activities["year"] = pd.to_datetime(
+            self.activities["start_date_local"]
+        ).dt.year
+
         self.activities.loc[:, "start_date"] = pd.to_datetime(
             self.activities["start_date"]
         ).dt.tz_localize(None)
@@ -35,14 +61,12 @@ class Cleaner:
         # drop columns
         self.activities.drop(
             [
-                "map.summary_polyline",
                 "resource_state",
                 "external_id",
                 "upload_id",
                 "location_city",
                 "location_state",
                 "has_kudoed",
-                "start_date",
                 "athlete.resource_state",
                 "utc_offset",
                 "map.resource_state",
@@ -71,7 +95,7 @@ class Cleaner:
         self.decode_polylines()
         self.convert_data_types()
         self.convert_values()
-        self.set_index()
+        # self.set_index()
         self.drop_columns()
 
         return self.activities
